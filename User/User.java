@@ -5,21 +5,15 @@ import java.util.ArrayList;
 import Store.Movie;
 import Store.Poster;
 
-public class User {
-    public String name;
-    public SearchStrategy searchStrat;
-
-
-    public void setSearchStrategy(SearchStrategy strat) {
-        this.searchStrat = strat;
-    }
+public interface User {
+    public void setSearchStrategy(SearchStrategy strat) ;
 }
 
-class Employee extends User {
+class Employee implements User {
 
-    public Employee(String name) {
-        this.name = name;
-    }
+    public SearchStrategy searchStrat;
+
+    public Employee() {}
 
     // once a movie has been searched for (through EmployeeSearch search() method), the movie returned can then be used in this method to actually order it and add it to the store
     public String orderMovie(Movie movie) {
@@ -30,14 +24,17 @@ class Employee extends User {
     public String orderPoster(Poster poster) {
         return null;
     }
+
+    public void setSearchStrategy(SearchStrategy strat) {
+        this.searchStrat = strat;
+    }
     
 }
 
-class Customer extends User {
-    
-    public Customer(String name) {
-        this.name = name;
-    }
+class Customer implements User {
+    public SearchStrategy searchStrat;
+
+    public Customer() {}
 
     // returns a string so when it's called, we can grab that confirmation string and put it into the output
     public String addToCart(Movie movie) {
@@ -46,5 +43,9 @@ class Customer extends User {
 
     public String checkout(ArrayList<Movie> cart) {
         return null;
+    }
+
+    public void setSearchStrategy(SearchStrategy strat) {
+        this.searchStrat = strat;
     }
 }

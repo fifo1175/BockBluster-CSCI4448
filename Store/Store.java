@@ -2,13 +2,16 @@ package Store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import User.UserFactory;
 
 public class Store {
     public ArrayList<Movie> moviesInStock;
     public ArrayList<Movie> movieOnShelf;
     public ArrayList<Poster> postersInStock;
 
-    public void DisplayCustomerUI(List<String> strings) {
+    public void DisplayUI(List<String> strings) {
         for (int i = 0; i < 100; i++) {
             System.out.print("-");
         }
@@ -40,12 +43,13 @@ public class Store {
         for (int i = 0; i < 100; i++) {
             System.out.print("-");
         }
+        System.out.println();
 
     }
 
     
 
-    public void DisplayEmployeeUI() {
+    public void DisplayEmployeeUI() { // may not even need this, can just use 1 UI function and change the strings that go into it
         
     }
 
@@ -56,6 +60,26 @@ public class Store {
     public static void runSimulation() {
 
         Store store = new Store();
+        int choice = store.loginScreen();
+
+        UserFactory factory = new UserFactory();
+
+        if(choice == 1) {
+            factory.getUser("Customer");
+            int choice1 = store.customerMenu();
+        }
+        else if(choice == 2) {
+            factory.getUser("Employee");
+        }
+        else {
+            return;
+        }
+
+        //store.DisplayCustomerUI(strings);
+    }
+
+    public int loginScreen() {
+
         List<String> strings = new ArrayList<String>();
         strings.add("");
         strings.add("Welcome to BockBluster Movie Rental and Recommendations!");
@@ -72,8 +96,40 @@ public class Store {
         strings.add("");
         strings.add("");
         strings.add("");
-        store.DisplayCustomerUI(strings);
+        DisplayUI(strings);
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        return choice;
     }
+
+    public int customerMenu() {
+        List<String> strings = new ArrayList<String>();
+        strings.add("");
+        strings.add("Home page for Customer");
+        strings.add("");
+        strings.add("");
+        strings.add("");
+        strings.add("Press 1 if you'd like to search for a movie");  // length 28, half 14, start 35
+        strings.add("Press 2 if you'd like to get some movie recommendations"); // length 29, half 14, start 35, should be 1 less space since the length is 1 longer
+        strings.add("Press 3 if you'd like to checkout");
+        strings.add("Press 4 if you'd like to wait around and see what happens in the store");
+        strings.add("");
+        strings.add("");
+        strings.add("Press 0 to exit the store");
+        strings.add("");
+        strings.add("");
+        strings.add("");
+        DisplayUI(strings);
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        return choice;
+    }
+
+
 
     
 }
