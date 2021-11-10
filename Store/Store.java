@@ -64,12 +64,13 @@ public class Store {
 
         UserFactory factory = new UserFactory();
 
-        if(choice == 1) {
+        if(choice == 1) {  // at some point, redo this choice logic so it doesn't become a huge nested if statement block
             factory.getUser("Customer");
             int choice1 = store.customerMenu();
         }
-        else if(choice == 2) {
+        else if(choice == 2) {   
             factory.getUser("Employee");
+            int choice2 = store.employeeMenu();
         }
         else {
             return;
@@ -86,8 +87,8 @@ public class Store {
         strings.add("");
         strings.add("Use the number keys to navigate the menu");
         strings.add("");
-        strings.add("Press 1 if you're a customer");  // length 28, half 14, start 35
-        strings.add("Press 2 if you're an employee"); // length 29, half 14, start 35, should be 1 less space since the length is 1 longer
+        strings.add("Press 1 if you're a customer");
+        strings.add("Press 2 if you're an employee"); 
         strings.add("Press 3 if you're just passing by!");
         strings.add("");
         strings.add("");
@@ -111,11 +112,36 @@ public class Store {
         strings.add("");
         strings.add("");
         strings.add("");
-        strings.add("Press 1 if you'd like to search for a movie");  // length 28, half 14, start 35
-        strings.add("Press 2 if you'd like to get some movie recommendations"); // length 29, half 14, start 35, should be 1 less space since the length is 1 longer
+        strings.add("Press 1 if you'd like to search for a movie");
+        strings.add("Press 2 if you'd like to get some movie recommendations"); 
         strings.add("Press 3 if you'd like to checkout");
         strings.add("Press 4 if you'd like to wait around and see what happens in the store");
         strings.add("");
+        strings.add("");
+        strings.add("Press 0 to exit the store");
+        strings.add("");
+        strings.add("");
+        strings.add("");
+        DisplayUI(strings);
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        return choice;
+    }
+
+    public int employeeMenu() {
+        List<String> strings = new ArrayList<String>();
+        strings.add("");
+        strings.add("Home page for Employee");
+        strings.add("");
+        strings.add("");
+        strings.add("");
+        strings.add("Press 1 if you'd like to search for a movie to order"); 
+        strings.add("Press 2 if you'd like to stock the shelves with movies you've ordered"); 
+        strings.add("Press 3 if you'd like to search for a poster to order");
+        strings.add("Press 4 if you'd like to put up the posters you've ordered");
+        strings.add("Press 5 if you'd like to wait around and see what happens in the store");
         strings.add("");
         strings.add("Press 0 to exit the store");
         strings.add("");
