@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import User.User;
 import User.UserFactory;
 
 public class Store {
@@ -53,7 +54,11 @@ public class Store {
         
     }
 
-    public Movie APISearch(String title){
+    public Movie TitleSearch(String title){  // search API for movie by title
+        return null;
+    }
+
+    public ArrayList<Movie> GenreSearch(String Genre) {  // search API for movies by genre, return 5 of that genre
         return null;
     }
 
@@ -61,21 +66,27 @@ public class Store {
 
         Store store = new Store();
         int choice = store.loginScreen();
-
+        int choice1 = 1;
+        int choice2 = 1;
+        int customerMenuChoice = 1;
         UserFactory factory = new UserFactory();
 
-        if(choice == 1) {  // at some point, redo this choice logic so it doesn't become a huge nested if statement block
-            factory.getUser("Customer");
-            int choice1 = store.customerMenu();
-        }
-        else if(choice == 2) {   
-            factory.getUser("Employee");
-            int choice2 = store.employeeMenu();
-        }
-        else {
-            return;
+        while (choice != 0 && choice1 != 0 && choice2 != 0 && customerMenuChoice != 0) {
+            if(choice == 1) {  // at some point, redo this choice logic so it doesn't become a huge nested if statement block
+                User customer = factory.getUser("Customer");
+                choice1 = store.customerMenu();
+                customerMenuChoice = store.runCustomer(choice1, customer);
+            }
+            else if(choice == 2) {   
+                factory.getUser("Employee");
+                choice2 = store.employeeMenu();
+            }
+            else {
+                return;
+            }
         }
 
+        return;
         //store.DisplayCustomerUI(strings);
     }
 
@@ -89,7 +100,7 @@ public class Store {
         strings.add("");
         strings.add("Press 1 if you're a customer");
         strings.add("Press 2 if you're an employee"); 
-        strings.add("Press 3 if you're just passing by!");
+        strings.add("Press 0 if you're just passing by!");
         strings.add("");
         strings.add("");
         strings.add("");
@@ -101,7 +112,7 @@ public class Store {
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-
+        
         return choice;
     }
 
@@ -126,8 +137,127 @@ public class Store {
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
+        
 
         return choice;
+    }
+
+    public int runCustomer(int choice, User customer) {
+        if (choice == 1) {
+            List<String> strings = new ArrayList<String>();
+            strings.add("");
+            strings.add("Movie Search");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("Please enter the title of the movie you wish to search for:");
+            strings.add(""); 
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            DisplayUI(strings);
+            Scanner scanner = new Scanner(System.in);
+            String movieTitle = scanner.next();
+        
+            this.TitleSearch(movieTitle);
+        }
+        if (choice == 2) {
+            List<String> strings = new ArrayList<String>();
+            strings.add("");
+            strings.add("Movie Recommendations");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("Press 1 for Action movie recommendations");
+            strings.add("Press 2 for Comedy movie recommendations"); 
+            strings.add("Press 3 for Drama movie recommendations");
+            strings.add("Press 4 for Sci-fi movie recommendations");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            DisplayUI(strings);
+            Scanner scanner = new Scanner(System.in);
+            int movieGenre = scanner.nextInt();
+            if(movieGenre == 1){
+                this.GenreSearch("Action");
+            }
+            if(movieGenre == 2){
+                this.GenreSearch("Comedy");
+            }
+            if(movieGenre == 3){
+                this.GenreSearch("Drama");
+            }
+            if(movieGenre == 4){
+                this.GenreSearch("Sci-fi");
+            }
+            
+        }
+        if (choice == 3) { // checkout
+            
+            List<String> titles = new ArrayList<String>();
+
+            for (int i = 0; i < 5; i++) {
+                if(customer.cart.get(i).title != "empty") {
+                    titles.add(customer.cart.get(i).title);
+                }
+                else {
+                    titles.add("");
+                }
+                
+            }
+            List<String> strings = new ArrayList<String>();
+            strings.add("");
+            strings.add("Customer Checkout");
+            strings.add("");
+            strings.add("");
+            strings.add("The movies you currently have in your cart are:");
+            strings.add(titles.get(0));
+            strings.add(titles.get(1)); 
+            strings.add(titles.get(2));
+            strings.add(titles.get(3));
+            strings.add(titles.get(4));
+            strings.add("");
+            strings.add("");
+            strings.add("Press 1 if you'd like confirm checkout");
+            strings.add("Press 2 to go back");
+            strings.add("");
+            DisplayUI(strings);
+            Scanner scanner = new Scanner(System.in);
+            int confirm = scanner.nextInt();
+            if(confirm == 1) {
+                strings.clear();
+                strings.add("");
+                strings.add("Thank you!");
+                strings.add("");
+                strings.add("");
+                strings.add("You checked out:");
+                strings.add(titles.get(0));
+                strings.add(titles.get(1)); 
+                strings.add(titles.get(2));
+                strings.add(titles.get(3));
+                strings.add(titles.get(4));
+                strings.add("");
+                strings.add("");
+                strings.add("Have a good day! We hope to see you again soon.");
+                strings.add("");
+                strings.add("");
+                DisplayUI(strings);
+                return 0;  // full exit
+            }
+            else{
+                return 1; // return to menu6
+            }
+            
+        }
+        return 0;
     }
 
     public int employeeMenu() {

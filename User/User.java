@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import Store.Movie;
 import Store.Poster;
 
-public interface User {
-    public void setSearchStrategy(SearchStrategy strat) ;
-}
-
-class Employee implements User {
+public abstract class User {
 
     public SearchStrategy searchStrat;
+    public ArrayList<Movie> cart;
+
+    public void setSearchStrategy(SearchStrategy strat) {
+        this.searchStrat = strat;
+    }
+}
+
+class Employee extends User {
 
     public Employee() {}
 
@@ -24,17 +28,18 @@ class Employee implements User {
     public String orderPoster(Poster poster) {
         return null;
     }
-
-    public void setSearchStrategy(SearchStrategy strat) {
-        this.searchStrat = strat;
-    }
-    
 }
 
-class Customer implements User {
-    public SearchStrategy searchStrat;
+class Customer extends User {
 
-    public Customer() {}
+    public Customer() {
+        cart = new ArrayList<Movie>();
+        for (int i = 0; i < 5; i++) {  // initialize cart to contain 5 empty movie objects (customers can checkhout max 5 movies)
+            Movie emptyMovie = new Movie("empty", 0, 0.0, "none");
+            cart.add(emptyMovie);
+        }
+        
+    }
 
     // returns a string so when it's called, we can grab that confirmation string and put it into the output
     public String addToCart(Movie movie) {
@@ -43,9 +48,5 @@ class Customer implements User {
 
     public String checkout(ArrayList<Movie> cart) {
         return null;
-    }
-
-    public void setSearchStrategy(SearchStrategy strat) {
-        this.searchStrat = strat;
     }
 }
