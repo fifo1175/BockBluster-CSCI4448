@@ -1,5 +1,13 @@
 package Store;
 
+// JSON imports
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -46,6 +54,39 @@ public class Store {
         }
         System.out.println();
 
+    }
+
+    public void fetchJSON () {
+        JSONParser parser = new JSONParser();
+
+        try (FileReader reader = new FileReader("testData.json")){
+
+            // read JSON file
+            Object obj = parser.parse(reader);
+
+            JSONArray movieList =  (JSONArray) obj;
+
+            System.out.println(movieList);
+
+            /*
+            for(Object object : movieList) {
+                JSONObject movieJSON = (JSONObject) object;  // create json objects from that array
+
+                String title = (String) movieJSON.get("Title");
+
+                System.out.println(title);
+            }
+            */
+        } catch (FileNotFoundException e) {
+            System.out.println("FILE NOT FOUND");
+            
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block`
+            e.printStackTrace();
+        }
     }
 
     
@@ -163,6 +204,8 @@ public class Store {
             DisplayUI(strings);
             Scanner scanner = new Scanner(System.in);
             String movieTitle = scanner.next();
+
+            this.fetchJSON();
         
             this.TitleSearch(movieTitle);
         }
