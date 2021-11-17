@@ -5,9 +5,20 @@ import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+// API imports
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -95,11 +106,69 @@ public class Store {
         
     }
 
-    public Movie TitleSearch(String title){  // search API for movie by title
-        return null;
+    public String MovieSearch(String title) throws Exception {
+        /**
+         * Use this method to obtain a list of movies related to the user's input
+         * @param title Movie title to be searched
+         * @return prettyJsonString JSON-formatted output containing search results
+         */
+        // Host url
+        String host = "https://movie-database-imdb-alternative.p.rapidapi.com/";
+        String charset = "UTF-8";
+        // Headers for a request
+        String x_rapidapi_host = "movie-database-imdb-alternative.p.rapidapi.com";
+        String x_rapidapi_key = "3c14721fddmsh6282e2acc432c95p14d022jsn00a8f4c7f50c";
+
+        // Format query for preventing encoding problems
+        String query = String.format("s=%s",
+                URLEncoder.encode(title, charset));
+
+        HttpResponse<JsonNode> response = Unirest.get(host + "?" + query)
+                .header("x-rapidapi-host", x_rapidapi_host)
+                .header("x-rapidapi-key", x_rapidapi_key)
+                .asJson();
+
+        //Prettifying
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(response.getBody().toString());
+        String prettyJsonString = gson.toJson(je);
+
+        return prettyJsonString;
     }
 
-    public ArrayList<Movie> GenreSearch(String Genre) {  // search API for movies by genre, return 5 of that genre
+    public String GetMovie(String movieID) throws Exception {
+        /**
+         * Use this method to obtain movie details based on a movie ID
+         * @param movieID IMDb movie ID (e.g. tt0111161)
+         * @return prettyJsonString JSON-formatted output containing movie details
+         */
+        // Host url
+        String host = "https://movie-database-imdb-alternative.p.rapidapi.com/";
+        String charset = "UTF-8";
+        // Headers for a request
+        String x_rapidapi_host = "movie-database-imdb-alternative.p.rapidapi.com";
+        String x_rapidapi_key = "3c14721fddmsh6282e2acc432c95p14d022jsn00a8f4c7f50c";
+
+        // Format query for preventing encoding problems
+        String query = String.format("i=%s",
+                URLEncoder.encode(movieID, charset));
+
+        HttpResponse<JsonNode> response = Unirest.get(host + "?" + query)
+                .header("x-rapidapi-host", x_rapidapi_host)
+                .header("x-rapidapi-key", x_rapidapi_key)
+                .asJson();
+
+        //Prettifying
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser jp = new JsonParser();
+        JsonElement je = jp.parse(response.getBody().toString());
+        String prettyJsonString = gson.toJson(je);
+
+        return prettyJsonString;
+    }
+
+    public ArrayList<Movie> GetGenre(String Genre) {  // search API for movies by genre, return 5 of that genre
         return null;
     }
 
