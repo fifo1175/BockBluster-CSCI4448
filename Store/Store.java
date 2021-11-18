@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.json.*;
 
 // API imports
 import com.mashape.unirest.http.HttpResponse;
@@ -65,7 +66,7 @@ public class Store {
 
     }
 
-    public void fetchJSON () {
+    public void fetchJSONFromFile () {
         JSONParser parser = new JSONParser();
 
         try (FileReader reader = new FileReader("testData.json")){
@@ -73,10 +74,42 @@ public class Store {
             // read JSON file
             Object obj = parser.parse(reader);
 
-            JSONArray movieList =  (JSONArray) obj;
+            org.json.JSONArray movieList =  (org.json.JSONArray) obj;
 
             System.out.println(movieList);
 
+            org.json.JSONObject result = null;
+
+            result = movieList.getJSONObject(0);
+
+            String title = result.getString("Title");
+            String imdbID = result.getString("imdbRating");
+            String year = result.getString("Year");
+            String filmRating = result.getString("Rated");
+            String runtime = result.getString("Runtime");
+            String imdbRating = result.getString("imdbRating");
+            String genre = result.getString("Genre");
+            String plot = result.getString("Plot");
+            String director = result.getString("Director");
+            String actors = result.getString("Actors");
+            String country = result.getString("Country");
+
+            Movie resultMovie = new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                    actors, country);
+
+            System.out.println("Title: " + resultMovie.title);
+            System.out.println("Release Year: " + resultMovie.year);
+            System.out.println("Film Rating: " + resultMovie.filmRating);
+            System.out.println("Runtime: " + resultMovie.runtime);
+            System.out.println("IMDb Rating: " + resultMovie.imdbRating);
+            System.out.println("Genre: " + resultMovie.genre);
+            System.out.println("Plot: " + WordUtils.wrap(resultMovie.plot, 90));
+            System.out.println("Director: " + resultMovie.director);
+            System.out.println("Actors: " + resultMovie.actors);
+            System.out.println("Country: " + resultMovie.country);
+
+
+            
             /*
             for(Object object : movieList) {
                 JSONObject movieJSON = (JSONObject) object;  // create json objects from that array
@@ -168,6 +201,7 @@ public class Store {
         Movie resultMovie = new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
                 actors, country);
 
+
         return resultMovie;
     }
 
@@ -184,9 +218,11 @@ public class Store {
         int customerMenuChoice = 1;
         UserFactory factory = new UserFactory();
 
+        User customer = factory.getUser("Customer");
+
         while (choice != 0 && choice1 != 0 && choice2 != 0 && customerMenuChoice != 0) {
             if(choice == 1) {  // at some point, redo this choice logic so it doesn't become a huge nested if statement block
-                User customer = factory.getUser("Customer");
+                
                 choice1 = store.customerMenu();
                 customerMenuChoice = store.runCustomer(choice1, customer);
             }
@@ -275,9 +311,9 @@ public class Store {
             strings.add("");
             DisplayUI(strings);
             Scanner scanner = new Scanner(System.in);
-            String movieTitle = scanner.next();
-
-            this.fetchJSON();
+            String movieTitle = scanner.nextLine();
+ 
+            // this.fetchJSONFromFile();
 
             HttpResponse<JsonNode> searchResult = this.MovieSearch(movieTitle);
 
@@ -342,6 +378,8 @@ public class Store {
                 System.out.println("Actors: " + resultMovie.actors);
                 System.out.println("Country: " + resultMovie.country);
 
+                customer.cart.add(resultMovie);
+
                 return 1;
             }
         }
@@ -383,15 +421,18 @@ public class Store {
 
             List<String> titles = new ArrayList<String>();
 
-            for (int i = 0; i < 5; i++) {
-                if(customer.cart.get(i).title != "empty") {
-                    titles.add(customer.cart.get(i).title);
-                }
-                else {
-                    titles.add("");
-                }
+            int numInCart = customer.cart.size();
+
+            for (int i = 0; i < numInCart; i++) {
+                
+                titles.add(customer.cart.get(i).title);
 
             }
+
+            for (int i = numInCart; i < 5; i++) {
+                titles.add("");
+            }
+
             List<String> strings = new ArrayList<String>();
             strings.add("");
             strings.add("Customer Checkout");
