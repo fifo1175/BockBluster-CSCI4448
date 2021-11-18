@@ -1,7 +1,6 @@
 package Store;
 
 // JSON imports
-import com.google.gson.*;
 import org.json.JSONException;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -125,16 +124,10 @@ public class Store {
                 .header("x-rapidapi-key", x_rapidapi_key)
                 .asJson();
 
-        //Prettifying
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        JsonParser jp = new JsonParser();
-//        JsonElement je = jp.parse(response.getBody().toString());
-//        String prettyJsonString = gson.toJson(je);
-
         return response;
     }
 
-    public String GetMovie(String movieID) throws Exception {
+    public Movie GetMovie(String movieID) throws Exception {
         /**
          * Use this method to obtain movie details based on a movie ID
          * @param movieID IMDb movie ID (e.g. tt0111161)
@@ -156,13 +149,9 @@ public class Store {
                 .header("x-rapidapi-key", x_rapidapi_key)
                 .asJson();
 
-        //Prettifying
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonParser jp = new JsonParser();
-        JsonElement je = jp.parse(response.getBody().toString());
-        String prettyJsonString = gson.toJson(je);
 
-        return prettyJsonString;
+
+        return null;
     }
 
     public ArrayList<Movie> GenreSearch(String Genre) {  // search API for movies by genre, return 5 of that genre
@@ -276,20 +265,22 @@ public class Store {
             HttpResponse<JsonNode> searchResult = this.MovieSearch(movieTitle);
 
             System.out.println("Select an option below:");
+
+            org.json.JSONArray results = new org.json.JSONArray();
             try {
-                org.json.JSONArray results = searchResult.getBody().getObject().getJSONArray("Search");
-
-                for (int i = 0; i < (results.length()) / 2; i++) {
-                    //System.out.println(results.getJSONObject(1));
-
-                    org.json.JSONObject result = results.getJSONObject(i);
-                    String title = result.getString("Title");
-                    String year = result.getString("Year");
-
-                    System.out.println(i + 1 + ": " + title + " (" + year + ")");
-                }
+                results = searchResult.getBody().getObject().getJSONArray("Search");
             } catch (JSONException e) {
                 System.out.println("\'" + movieTitle + "\' produced no results.");
+            }
+
+            for (int i = 0; i < (results.length()) / 2; i++) {
+                //System.out.println(results.getJSONObject(1));
+
+                org.json.JSONObject result = results.getJSONObject(i);
+                String title = result.getString("Title");
+                String year = result.getString("Year");
+
+                System.out.println(i + 1 + ": " + title + " (" + year + ")");
             }
         }
         if (choice == 2) {

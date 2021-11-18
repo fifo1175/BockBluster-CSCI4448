@@ -34,8 +34,8 @@ class Customer extends User {
 
     public Customer() {
         cart = new ArrayList<Movie>();
-        for (int i = 0; i < 5; i++) {  // initialize cart to contain 5 empty movie objects (customers can checkhout max 5 movies)
-            Movie emptyMovie = new Movie("empty", 0, 0.0, "none");
+        for (int i = 0; i < 5; i++) {  // initialize cart to contain 5 empty movie objects (customers can check out max 5 movies)
+            Movie emptyMovie = new Movie();
             cart.add(emptyMovie);
         }
         
