@@ -1,5 +1,15 @@
 package Store;
 
+// -------------------------------------------------------------------------------------------------------------------------
+// TO DO:
+// put movie search funcitonality into employeeSearch and customerSearch for strategy pattern
+// initialize empoloyee object before login functionality, so open store can be called everytime as an employee method
+// recommendations from the open store movie objects that get initialized
+// events with decorator
+// store singleton
+// poster search same as movie search, just create a poster object at the end
+// AFTER all functionality, we can add database for posters, maybe display on a localhost site
+
 // JSON imports
 import org.json.JSONException;
 import org.json.simple.*;
@@ -22,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import User.CustomerSearch;
 import User.User;
 import User.UserFactory;
 
@@ -224,7 +235,7 @@ public class Store {
             if(choice == 1) {  // at some point, redo this choice logic so it doesn't become a huge nested if statement block
                 
                 choice1 = store.customerMenu();
-                customerMenuChoice = store.runCustomer(choice1, customer);
+                customerMenuChoice = store.runCustomer(choice1, customer, store);
             }
             else if(choice == 2) {
                 factory.getUser("Employee");
@@ -261,7 +272,7 @@ public class Store {
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-
+        
         return choice;
     }
 
@@ -286,12 +297,12 @@ public class Store {
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-
+    
 
         return choice;
     }
 
-    public int runCustomer(int choice, User customer) throws Exception {
+    public int runCustomer(int choice, User customer, Store store) throws Exception {
         if (choice == 1) {
             List<String> strings = new ArrayList<String>();
             strings.add("");
@@ -312,9 +323,20 @@ public class Store {
             DisplayUI(strings);
             Scanner scanner = new Scanner(System.in);
             String movieTitle = scanner.nextLine();
+        
  
             // this.fetchJSONFromFile();
 
+            CustomerSearch cSearch = new CustomerSearch(movieTitle, store, customer);
+
+            Movie resultMovie = cSearch.search(movieTitle, store, customer);
+
+            customer.cart.add(resultMovie);
+
+            System.out.println();
+            System.out.println(resultMovie.title + " was added to your cart!");
+
+             /* START OF SEARCH FUNCTIONALITY
             HttpResponse<JsonNode> searchResult = this.MovieSearch(movieTitle);
 
             System.out.println("Select an option below:");
@@ -382,27 +404,32 @@ public class Store {
 
                 return 1;
             }
+
+            END OF SEARCH FUNCTIONALITY */ 
+
+            return 1;
         }
         if (choice == 2) {
-            List<String> strings = new ArrayList<String>();
-            strings.add("");
-            strings.add("Movie Recommendations");
-            strings.add("");
-            strings.add("");
-            strings.add("");
-            strings.add("Press 1 for Action movie recommendations");
-            strings.add("Press 2 for Comedy movie recommendations");
-            strings.add("Press 3 for Drama movie recommendations");
-            strings.add("Press 4 for Sci-fi movie recommendations");
-            strings.add("");
-            strings.add("");
-            strings.add("");
-            strings.add("");
-            strings.add("");
-            strings.add("");
-            DisplayUI(strings);
+            List<String> strings1 = new ArrayList<String>();
+            strings1.add("");
+            strings1.add("Movie Recommendations");
+            strings1.add("");
+            strings1.add("");
+            strings1.add("");
+            strings1.add("Press 1 for Action movie recommendations");
+            strings1.add("Press 2 for Comedy movie recommendations");
+            strings1.add("Press 3 for Drama movie recommendations");
+            strings1.add("Press 4 for Sci-fi movie recommendations");
+            strings1.add("");
+            strings1.add("");
+            strings1.add("");
+            strings1.add("");
+            strings1.add("");
+            strings1.add("");
+            DisplayUI(strings1);
             Scanner scanner = new Scanner(System.in);
             int movieGenre = scanner.nextInt();
+        
             if(movieGenre == 1){
                 this.GenreSearch("Action");
             }
@@ -433,43 +460,44 @@ public class Store {
                 titles.add("");
             }
 
-            List<String> strings = new ArrayList<String>();
-            strings.add("");
-            strings.add("Customer Checkout");
-            strings.add("");
-            strings.add("");
-            strings.add("The movies you currently have in your cart are:");
-            strings.add(titles.get(0));
-            strings.add(titles.get(1));
-            strings.add(titles.get(2));
-            strings.add(titles.get(3));
-            strings.add(titles.get(4));
-            strings.add("");
-            strings.add("");
-            strings.add("Press 1 if you'd like confirm checkout");
-            strings.add("Press 2 to go back");
-            strings.add("");
-            DisplayUI(strings);
+            List<String> strings2 = new ArrayList<String>();
+            strings2.add("");
+            strings2.add("Customer Checkout");
+            strings2.add("");
+            strings2.add("");
+            strings2.add("The movies you currently have in your cart are:");
+            strings2.add(titles.get(0));
+            strings2.add(titles.get(1));
+            strings2.add(titles.get(2));
+            strings2.add(titles.get(3));
+            strings2.add(titles.get(4));
+            strings2.add("");
+            strings2.add("");
+            strings2.add("Press 1 if you'd like confirm checkout");
+            strings2.add("Press 2 to go back");
+            strings2.add("");
+            DisplayUI(strings2);
             Scanner scanner = new Scanner(System.in);
             int confirm = scanner.nextInt();
+        
             if(confirm == 1) {
-                strings.clear();
-                strings.add("");
-                strings.add("Thank you!");
-                strings.add("");
-                strings.add("");
-                strings.add("You checked out:");
-                strings.add(titles.get(0));
-                strings.add(titles.get(1));
-                strings.add(titles.get(2));
-                strings.add(titles.get(3));
-                strings.add(titles.get(4));
-                strings.add("");
-                strings.add("");
-                strings.add("Have a good day! We hope to see you again soon.");
-                strings.add("");
-                strings.add("");
-                DisplayUI(strings);
+                strings2.clear();
+                strings2.add("");
+                strings2.add("Thank you!");
+                strings2.add("");
+                strings2.add("");
+                strings2.add("You checked out:");
+                strings2.add(titles.get(0));
+                strings2.add(titles.get(1));
+                strings2.add(titles.get(2));
+                strings2.add(titles.get(3));
+                strings2.add(titles.get(4));
+                strings2.add("");
+                strings2.add("");
+                strings2.add("Have a good day! We hope to see you again soon.");
+                strings2.add("");
+                strings2.add("");
+                DisplayUI(strings2);
                 return 0;  // full exit
             }
             else{
@@ -479,6 +507,8 @@ public class Store {
         }
         return 0;
     }
+    
+    
 
     public int employeeMenu() {
         List<String> strings = new ArrayList<String>();
@@ -501,11 +531,56 @@ public class Store {
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
+    
 
         return choice;
     }
 
+    public int runEmployee(int choice, User employee) throws Exception {
+        if (choice == 1){ //search for a movie to order
+            int returnval;
+            List<String> strings = new ArrayList<String>();
+            strings.add("");
+            strings.add("Movie Search");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("Please enter the title of the movie you wish to search for:");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            DisplayUI(strings);
+            Scanner scanner = new Scanner(System.in);
+            String movieTitle = scanner.next();
+        
+            // returnval = searchmovie(movieTitle, employee);  customer
+            //return returnval;
+            return 1;
+            }
 
+        if (choice == 2){ //stock the shelves with movies youve ordered
+            return 0;
+        }
+        if (choice == 3){ //youd like to search for posters to order
+            return 0;
+        }
+        if (choice == 4){ //like to put up the posters youve ordered
+            return 0;
+        }
+        if (choice == 5){ //wait around and see what happens
+            return 0;
+        }
+        if (choice == 6){
+            return 0;
+        }
+        return 0;
+    }
 
 
 }

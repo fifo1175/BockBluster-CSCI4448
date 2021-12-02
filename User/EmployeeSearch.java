@@ -1,6 +1,8 @@
 package User;
 
 import Store.Movie;
+import Store.Store;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import org.apache.commons.text.WordUtils;
@@ -8,8 +10,10 @@ import org.json.JSONException;
 
 import java.util.Scanner;
 
+/*
+
 public class EmployeeSearch implements SearchStrategy {
-    public Movie search(String movie, ) { //needs store class
+    public Movie search(String movie, Store store) { //needs store class
         HttpResponse<JsonNode> searchResult = store.MovieSearch(movie);
 
         System.out.println("Select an option below:");
@@ -61,7 +65,7 @@ public class EmployeeSearch implements SearchStrategy {
                     break;
             }
 
-            Movie resultMovie = GetMovie(result.getString("imdbID"));
+            Movie resultMovie = store.GetMovie(result.getString("imdbID"));
 
             System.out.println("Title: " + resultMovie.title);
             System.out.println("Release Year: " + resultMovie.year);
@@ -77,3 +81,5 @@ public class EmployeeSearch implements SearchStrategy {
         }
     }
 }
+
+*/
