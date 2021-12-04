@@ -3,11 +3,14 @@ package Store;
 // -------------------------------------------------------------------------------------------------------------------------
 // TO DO:
 // put movie search funcitonality into employeeSearch and customerSearch for strategy pattern
-// ----> customer search done, now need to figure out employee object creation and runEmployee
+// ----> DONE
+
 // initialize empoloyee object before login functionality, so open store can be called everytime as an employee method
-// recommendations from the open store movie objects that get initialized
+// ----> is open store still needed? what would it do?
+
+// implement singleton pattern with store
+
 // events with decorator
-// store singleton
 // poster search same as movie search, just create a poster object at the end
 // AFTER all functionality, we can add database for posters, maybe display on a localhost site
 
@@ -35,6 +38,7 @@ import java.util.Scanner;
 
 import User.CustomerSearch;
 import User.EmployeeSearch;
+import User.PosterSearch;
 import User.User;
 import User.UserFactory;
 
@@ -222,6 +226,41 @@ public class Store {
 
 
         return resultMovie;
+    }
+
+    public Poster GetPoster(String movieID) throws Exception {
+        /**
+         * Use this method to obtain a poster object based on a movie ID
+         * @param movieID IMDb movie ID (e.g. tt0111161)
+         * @return prettyJsonString JSON-formatted output containing movie details
+         */
+        // Host url
+        String host = "https://movie-database-imdb-alternative.p.rapidapi.com/";
+        String charset = "UTF-8";
+        // Headers for a request
+        String x_rapidapi_host = "movie-database-imdb-alternative.p.rapidapi.com";
+        String x_rapidapi_key = "3c14721fddmsh6282e2acc432c95p14d022jsn00a8f4c7f50c";
+
+        // Format query for preventing encoding problems
+        String query = String.format("i=%s",
+                URLEncoder.encode(movieID, charset));
+
+        HttpResponse<JsonNode> response = Unirest.get(host + "?" + query)
+                .header("x-rapidapi-host", x_rapidapi_host)
+                .header("x-rapidapi-key", x_rapidapi_key)
+                .asJson();
+
+        org.json.JSONObject result = response.getBody().getObject();
+
+        String title = result.getString("Title");
+        String year = result.getString("Year");
+        String URL = result.getString("Poster");
+        
+
+        Poster resultPoster = new Poster(title, year, URL);
+
+
+        return resultPoster;
     }
 
     public ArrayList<Movie> GenreSearch(String Genre) {  // search API for movies by genre, return 5 of that genre
@@ -473,7 +512,7 @@ public class Store {
 
     public int runEmployee(int choice, User employee, Store store) throws Exception {
         if (choice == 1){ //search for a movie to order
-            int returnval;
+            
             List<String> strings = new ArrayList<String>();
             strings.add("");
             strings.add("Movie Search");
@@ -501,15 +540,52 @@ public class Store {
             return 1;
             }
 
+        /* stocking shelves won't do much, if we make a web page, we could display the movie
+            otherwise, we'd just be adding them to another array for no real reason
+
         if (choice == 2){ //stock the shelves with movies that were ordered
             return 0;
         }
+        */
+
         if (choice == 3){ //youd like to search for posters to order
+            List<String> strings = new ArrayList<String>();
+            strings.add("");
+            strings.add("Poster Search");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("Please enter the title of the movie you want the POSTER for:");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            strings.add("");
+            DisplayUI(strings);
+            Scanner scanner = new Scanner(System.in);
+            String movieTitle = scanner.next();
+        
+            PosterSearch eSearch = new PosterSearch(movieTitle, store, employee);
+
+            Movie resultMovie = eSearch.search(movieTitle, store, employee);
+
+            System.out.println("Searched for poster");
+
+            return 1;
+            
+        }
+
+        /* We could do this with the webpage, if we get to that point
+
+        if (choice == 4){ //  PUT UP the posters that were orderd
             return 0;
         }
-        if (choice == 4){ //like to put up the posters youve ordered
-            return 0;
-        }
+        */
+
         if (choice == 5){ //wait around and see what happens
             return 0;
         }

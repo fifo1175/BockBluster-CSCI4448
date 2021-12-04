@@ -1,6 +1,7 @@
 package User;
 
 import Store.Movie;
+import Store.Poster;
 import Store.Store;
 
 // JSON imports
@@ -10,6 +11,12 @@ import org.json.JSONException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 
+// Open Url in browser imports
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 
 import org.apache.commons.text.WordUtils;
 
@@ -18,19 +25,19 @@ import java.util.Scanner;
 import User.CustomerSearch;
 
 
-public class EmployeeSearch implements SearchStrategy {
+public class PosterSearch implements SearchStrategy {
     public String movie;
     public Store store;
     public User user;
 
-    public EmployeeSearch(String movie, Store store, User user) {
+    public PosterSearch(String movie, Store store, User user) {
         this.movie = movie;
         this.store = store;
         this.user = user;
     }
     
 
-    @Override
+    @Override  // get a poster instead of a movie, using factory pattern
     public Movie search(String movie, Store store, User user) { //needs store class
         HttpResponse<JsonNode> searchResult = null;
         try {
@@ -85,9 +92,9 @@ public class EmployeeSearch implements SearchStrategy {
                     break;
             }
 
-            Movie resultMovie = null;
+            Poster resultPoster = null;
             try {
-                resultMovie = store.GetMovie(result.getString("imdbID"));
+                resultPoster = store.GetPoster(result.getString("imdbID"));
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -96,25 +103,38 @@ public class EmployeeSearch implements SearchStrategy {
                 e.printStackTrace();
             }
 
-            System.out.println("Title: " + resultMovie.title);
-            System.out.println("Release Year: " + resultMovie.year);
-            System.out.println("Film Rating: " + resultMovie.filmRating);
-            System.out.println("Runtime: " + resultMovie.runtime);
-            System.out.println("IMDb Rating: " + resultMovie.imdbRating);
-            System.out.println("Genre: " + resultMovie.genre);
-            System.out.println("Plot: " + WordUtils.wrap(resultMovie.plot, 90));
-            System.out.println("Director: " + resultMovie.director);
-            System.out.println("Actors: " + resultMovie.actors);
-            System.out.println("Country: " + resultMovie.country);
+            System.out.println("Title: " + resultPoster.title);
+            System.out.println("Release Year: " + resultPoster.year);
+            System.out.println("Poster URL: " + resultPoster.URL);
             
-            // movie is added to store's inventory
+            // open poster url in default broser
+            // FROM: https://stackoverflow.com/questions/5226212/how-to-open-the-default-webbrowser-using-java
+            String url = resultPoster.URL;
 
-            store.moviesInStock.add(resultMovie);
+            if(Desktop.isDesktopSupported()){
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.browse(new URI(url));
+                } catch (IOException | URISyntaxException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }else{
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    runtime.exec("xdg-open " + url);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
 
-            System.out.println();
-            System.out.println(resultMovie.title + " was added to the store's inventory!");
-        
-            return resultMovie;
+            // add the poster to the store's poster inventory
+
+            store.postersInStock.add(resultPoster);
+           
+            return null;
         }
     }
 }
+

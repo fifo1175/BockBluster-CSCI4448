@@ -60,8 +60,6 @@ public class CustomerSearch implements SearchStrategy {
             System.out.println(i + 1 + ": " + title + " (" + year + ")");
         }
 
-        System.out.println("6: Return to Customer Home Page");
-
         while (true) {
             Scanner scanner = new Scanner(System.in);
             int searchChoice = scanner.nextInt();

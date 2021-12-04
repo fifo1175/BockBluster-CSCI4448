@@ -12,6 +12,7 @@ public class Movie {
     public String director;
     public String actors;
     public String country;
+    
 
     public Movie() {
         this.title = "";
