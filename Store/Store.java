@@ -9,6 +9,7 @@ package Store;
 // ----> is open store still needed? what would it do?
 
 // implement singleton pattern with store
+// ----> DONE
 
 // events with decorator
 // poster search same as movie search, just create a poster object at the end
@@ -46,11 +47,19 @@ public class Store {
     public ArrayList<Movie> moviesInStock;  // movies orderd
     public ArrayList<Movie> movieOnShelf;  // movies already on shelf
     public ArrayList<Poster> postersInStock;
+    private static Store single_instance = null;  // singleton object instance
 
-    public Store(){
+    private Store(){                              // singleton private constructor
         moviesInStock = new ArrayList<Movie>();
         moviesInStock = new ArrayList<Movie>();
         postersInStock = new ArrayList<Poster>();
+    }
+
+    public static Store getInstance() {           // singleton get instance
+        if(single_instance == null) {
+            single_instance = new Store();
+        }
+        return single_instance;
     }
 
     public void DisplayUI(List<String> strings) {
@@ -269,7 +278,7 @@ public class Store {
 
     public static void runSimulation() throws Exception {
 
-        Store store = new Store();
+        Store store = Store.getInstance();   // Singleton instantiation
         int choice = store.loginScreen();
         int choice1 = 1;
         int choice2 = 1;
