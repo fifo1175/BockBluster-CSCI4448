@@ -3,6 +3,7 @@ package Store;
 // -------------------------------------------------------------------------------------------------------------------------
 // TO DO:
 // put movie search funcitonality into employeeSearch and customerSearch for strategy pattern
+// ----> customer search done, now need to figure out employee object creation and runEmployee
 // initialize empoloyee object before login functionality, so open store can be called everytime as an employee method
 // recommendations from the open store movie objects that get initialized
 // events with decorator
@@ -33,13 +34,20 @@ import java.util.List;
 import java.util.Scanner;
 
 import User.CustomerSearch;
+import User.EmployeeSearch;
 import User.User;
 import User.UserFactory;
 
 public class Store {
-    public ArrayList<Movie> moviesInStock;
-    public ArrayList<Movie> movieOnShelf;
+    public ArrayList<Movie> moviesInStock;  // movies orderd
+    public ArrayList<Movie> movieOnShelf;  // movies already on shelf
     public ArrayList<Poster> postersInStock;
+
+    public Store(){
+        moviesInStock = new ArrayList<Movie>();
+        moviesInStock = new ArrayList<Movie>();
+        postersInStock = new ArrayList<Poster>();
+    }
 
     public void DisplayUI(List<String> strings) {
         for (int i = 0; i < 100; i++) {
@@ -227,11 +235,13 @@ public class Store {
         int choice1 = 1;
         int choice2 = 1;
         int customerMenuChoice = 1;
+        int employeeMenuChoice = 1;
         UserFactory factory = new UserFactory();
 
-        User customer = factory.getUser("Customer");
+        User customer = factory.getUser("Customer");  // will be used if user logs in as customer
+        User employee = factory.getUser("Employee");  // will be used if user logs in as employee
 
-        while (choice != 0 && choice1 != 0 && choice2 != 0 && customerMenuChoice != 0) {
+        while (choice != 0 && choice1 != 0 && choice2 != 0 && customerMenuChoice != 0 && employeeMenuChoice != 0) {
             if(choice == 1) {  // at some point, redo this choice logic so it doesn't become a huge nested if statement block
                 
                 choice1 = store.customerMenu();
@@ -240,6 +250,7 @@ public class Store {
             else if(choice == 2) {
                 factory.getUser("Employee");
                 choice2 = store.employeeMenu();
+                employeeMenuChoice = store.runEmployee(choice2, employee, store);
             }
             else {
                 return;
@@ -330,82 +341,6 @@ public class Store {
             CustomerSearch cSearch = new CustomerSearch(movieTitle, store, customer);
 
             Movie resultMovie = cSearch.search(movieTitle, store, customer);
-
-            customer.cart.add(resultMovie);
-
-            System.out.println();
-            System.out.println(resultMovie.title + " was added to your cart!");
-
-             /* START OF SEARCH FUNCTIONALITY
-            HttpResponse<JsonNode> searchResult = this.MovieSearch(movieTitle);
-
-            System.out.println("Select an option below:");
-
-            org.json.JSONObject result = null;
-            org.json.JSONArray resultArray = new org.json.JSONArray();
-            try {
-                resultArray = searchResult.getBody().getObject().getJSONArray("Search");
-            } catch (JSONException e) {
-                System.out.println("\'" + movieTitle + "\' produced no results.");
-            }
-
-            for (int i = 0; i < (resultArray.length()) / 2; i++) {
-                //System.out.println(results.getJSONObject(1));
-
-                result = resultArray.getJSONObject(i);
-                String title = result.getString("Title");
-                String year = result.getString("Year");
-
-                System.out.println(i + 1 + ": " + title + " (" + year + ")");
-            }
-
-            System.out.println("6: Return to Customer Home Page");
-
-            while(true) {
-                int searchChoice = scanner.nextInt();
-
-                switch (searchChoice) {
-                    case 1:
-                        result = resultArray.getJSONObject(0);
-                        break;
-                    case 2:
-                        result = resultArray.getJSONObject(1);
-                        break;
-                    case 3:
-                        result = resultArray.getJSONObject(2);
-                        break;
-                    case 4:
-                        result = resultArray.getJSONObject(3);
-                        break;
-                    case 5:
-                        result = resultArray.getJSONObject(4);
-                        break;
-                    case 6:
-                        return 1;
-                    default:
-                        System.out.println("Invalid input; please enter option 1-6");
-                        break;
-                }
-
-                Movie resultMovie = GetMovie(result.getString("imdbID"));
-
-                System.out.println("Title: " + resultMovie.title);
-                System.out.println("Release Year: " + resultMovie.year);
-                System.out.println("Film Rating: " + resultMovie.filmRating);
-                System.out.println("Runtime: " + resultMovie.runtime);
-                System.out.println("IMDb Rating: " + resultMovie.imdbRating);
-                System.out.println("Genre: " + resultMovie.genre);
-                System.out.println("Plot: " + WordUtils.wrap(resultMovie.plot, 90));
-                System.out.println("Director: " + resultMovie.director);
-                System.out.println("Actors: " + resultMovie.actors);
-                System.out.println("Country: " + resultMovie.country);
-
-                customer.cart.add(resultMovie);
-
-                return 1;
-            }
-
-            END OF SEARCH FUNCTIONALITY */ 
 
             return 1;
         }
@@ -536,7 +471,7 @@ public class Store {
         return choice;
     }
 
-    public int runEmployee(int choice, User employee) throws Exception {
+    public int runEmployee(int choice, User employee, Store store) throws Exception {
         if (choice == 1){ //search for a movie to order
             int returnval;
             List<String> strings = new ArrayList<String>();
@@ -559,12 +494,14 @@ public class Store {
             Scanner scanner = new Scanner(System.in);
             String movieTitle = scanner.next();
         
-            // returnval = searchmovie(movieTitle, employee);  customer
-            //return returnval;
+            EmployeeSearch eSearch = new EmployeeSearch(movieTitle, store, employee);
+
+            Movie resultMovie = eSearch.search(movieTitle, store, employee);
+
             return 1;
             }
 
-        if (choice == 2){ //stock the shelves with movies youve ordered
+        if (choice == 2){ //stock the shelves with movies that were ordered
             return 0;
         }
         if (choice == 3){ //youd like to search for posters to order

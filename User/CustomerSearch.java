@@ -5,29 +5,18 @@ import Store.Store;
 
 // JSON imports
 import org.json.JSONException;
-import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.json.*;
 
 // API imports
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
+
 
 import org.apache.commons.text.WordUtils;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import User.CustomerSearch;
-import User.User;
-import User.UserFactory;
+
 
 public class CustomerSearch implements SearchStrategy {
     public String movie;
@@ -120,6 +109,12 @@ public class CustomerSearch implements SearchStrategy {
             System.out.println("Actors: " + resultMovie.actors);
             System.out.println("Country: " + resultMovie.country);
             
+            // movie is added to customer's cart
+
+            user.cart.add(resultMovie);
+
+            System.out.println();
+            System.out.println(resultMovie.title + " was added to your cart!");
         
             return resultMovie;
         }

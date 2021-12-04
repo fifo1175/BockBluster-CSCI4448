@@ -3,18 +3,42 @@ package User;
 import Store.Movie;
 import Store.Store;
 
+// JSON imports
+import org.json.JSONException;
+
+// API imports
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+
+
 import org.apache.commons.text.WordUtils;
-import org.json.JSONException;
 
 import java.util.Scanner;
 
-/*
+import User.CustomerSearch;
+
 
 public class EmployeeSearch implements SearchStrategy {
-    public Movie search(String movie, Store store) { //needs store class
-        HttpResponse<JsonNode> searchResult = store.MovieSearch(movie);
+    public String movie;
+    public Store store;
+    public User user;
+
+    public EmployeeSearch(String movie, Store store, User user) {
+        this.movie = movie;
+        this.store = store;
+        this.user = user;
+    }
+    
+
+    @Override
+    public Movie search(String movie, Store store, User user) { //needs store class
+        HttpResponse<JsonNode> searchResult = null;
+        try {
+            searchResult = store.MovieSearch(movie);
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 
         System.out.println("Select an option below:");
 
@@ -58,14 +82,21 @@ public class EmployeeSearch implements SearchStrategy {
                 case 5:
                     result = resultArray.getJSONObject(4);
                     break;
-                case 6:
-                    return 1;
                 default:
                     System.out.println("Invalid input; please enter option 1-6");
                     break;
             }
 
-            Movie resultMovie = store.GetMovie(result.getString("imdbID"));
+            Movie resultMovie = null;
+            try {
+                resultMovie = store.GetMovie(result.getString("imdbID"));
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
             System.out.println("Title: " + resultMovie.title);
             System.out.println("Release Year: " + resultMovie.year);
@@ -77,9 +108,15 @@ public class EmployeeSearch implements SearchStrategy {
             System.out.println("Director: " + resultMovie.director);
             System.out.println("Actors: " + resultMovie.actors);
             System.out.println("Country: " + resultMovie.country);
-            return 1;
+            
+            // movie is added to store's inventory
+
+            store.moviesInStock.add(resultMovie);
+
+            System.out.println();
+            System.out.println(resultMovie.title + " was added to the store's inventory!");
+        
+            return resultMovie;
         }
     }
 }
-
-*/
