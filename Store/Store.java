@@ -11,8 +11,15 @@ package Store;
 // implement singleton pattern with store
 // ----> DONE
 
-// events with decorator
+// 3/4 patterns done, just need decorator
+
 // poster search same as movie search, just create a poster object at the end
+// ----> DONE
+
+// events with decorator
+
+
+
 // AFTER all functionality, we can add database for posters, maybe display on a localhost site
 
 // JSON imports
@@ -20,6 +27,7 @@ import org.json.JSONException;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.w3c.dom.events.Event;
 import org.json.*;
 
 // API imports
@@ -36,12 +44,21 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 import User.CustomerSearch;
 import User.EmployeeSearch;
 import User.PosterSearch;
 import User.User;
 import User.UserFactory;
+
+import Events.EventsDecorator;
+import Events.Events;
+import Events.ArgumentBadResult;
+import Events.AgreementGoodResult;
+import Events.Agreement;
+import Events.Argument;
+
 
 public class Store {
     public ArrayList<Movie> moviesInStock;  // movies orderd
@@ -484,9 +501,90 @@ public class Store {
                 return 0;  // full exit
             }
             else{
-                return 1; // return to menu6
+                return 1; // return to menu
             }
 
+        }
+        else if (choice == 4) { // events
+            int chance = ThreadLocalRandom.current().nextInt(1, 3); // 50/50 chance its an agreement or argument
+            if (chance == 1) {  // Agreement
+
+                int chance2 = ThreadLocalRandom.current().nextInt(1,3); // 50/50 chance the agreement has a good result
+                
+                Agreement agreement = new Agreement();  // regular agreement
+
+                String description = agreement.description;
+                String result = agreement.getResult();
+
+                if (chance2 == 1) {  // change it to good result agreement with decorator
+                    AgreementGoodResult aGoodResult = new AgreementGoodResult(agreement);
+                    description = aGoodResult.description;
+                    result = aGoodResult.getResult();
+                }
+
+                List<String> strings = new ArrayList<String>();
+                strings.add("");
+                strings.add(description);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add(result);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                DisplayUI(strings);
+                
+
+            }
+            else { // Argument
+                int chance2 = ThreadLocalRandom.current().nextInt(1,3); // 50/50 chance the agreement has a good result
+                
+                Argument argument = new Argument();  // regular argument
+
+                String description = argument.description;
+                String result = argument.getResult();
+
+                boolean badResult = false;  // keep track of whether its a bad result, because you get kicked out of the store if it is
+
+                if (chance2 == 1) {  // change it to bad result argument with decorator
+                    ArgumentBadResult aBadResult = new ArgumentBadResult(argument);
+                    description = aBadResult.description;
+                    result = aBadResult.getResult();
+                    badResult = true;
+                }
+
+                List<String> strings = new ArrayList<String>();
+                strings.add("");
+                strings.add(description);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add(result);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                DisplayUI(strings);
+
+                if (badResult == true) {  // the bad result means you get kicked out of the store
+                    return 0;
+                }
+                
+
+            }
+
+            return 1;
         }
         return 0;
     }
@@ -501,10 +599,10 @@ public class Store {
         strings.add("");
         strings.add("");
         strings.add("Press 1 if you'd like to search for a movie to order");
-        strings.add("Press 2 if you'd like to stock the shelves with movies you've ordered");
-        strings.add("Press 3 if you'd like to search for a poster to order");
-        strings.add("Press 4 if you'd like to put up the posters you've ordered");
-        strings.add("Press 5 if you'd like to wait around and see what happens in the store");
+        strings.add("Press 2 if you'd like to search for a poster to order");
+        strings.add("Press 3 if you'd like to wait around and see what happens in the store");
+        strings.add("");
+        strings.add("");
         strings.add("");
         strings.add("Press 0 to exit the store");
         strings.add("");
@@ -557,7 +655,7 @@ public class Store {
         }
         */
 
-        if (choice == 3){ //youd like to search for posters to order
+        if (choice == 2){ //youd like to search for posters to order
             List<String> strings = new ArrayList<String>();
             strings.add("");
             strings.add("Poster Search");
@@ -588,18 +686,86 @@ public class Store {
             
         }
 
-        /* We could do this with the webpage, if we get to that point
+        else if (choice == 3) { // events
+            int chance = ThreadLocalRandom.current().nextInt(1, 3); // 50/50 chance its an agreement or argument
+            if (chance == 1) {  // Agreement
 
-        if (choice == 4){ //  PUT UP the posters that were orderd
-            return 0;
-        }
-        */
+                int chance2 = ThreadLocalRandom.current().nextInt(1,3); // 50/50 chance the agreement has a good result
+                
+                Agreement agreement = new Agreement();  // regular agreement
 
-        if (choice == 5){ //wait around and see what happens
-            return 0;
-        }
-        if (choice == 6){
-            return 0;
+                String description = agreement.description;
+                String result = agreement.getResult();
+
+                if (chance2 == 1) {  // change it to good result agreement with decorator
+                    AgreementGoodResult aGoodResult = new AgreementGoodResult(agreement);
+                    description = aGoodResult.description;
+                    result = aGoodResult.getResult();
+                }
+
+                List<String> strings = new ArrayList<String>();
+                strings.add("");
+                strings.add(description);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add(result);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                DisplayUI(strings);
+                
+
+            }
+            else { // Argument
+                int chance2 = ThreadLocalRandom.current().nextInt(1,3); // 50/50 chance the agreement has a good result
+                
+                Argument argument = new Argument();  // regular argument
+
+                String description = argument.description;
+                String result = argument.getResult();
+
+                boolean badResult = false;  // keep track of whether its a bad result, because you get kicked out of the store if it is
+
+                if (chance2 == 1) {  // change it to bad result argument with decorator
+                    ArgumentBadResult aBadResult = new ArgumentBadResult(argument);
+                    description = aBadResult.description;
+                    result = aBadResult.getResult();
+                    badResult = true;
+                }
+
+                List<String> strings = new ArrayList<String>();
+                strings.add("");
+                strings.add(description);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add(result);
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                strings.add("");
+                DisplayUI(strings);
+
+                if (badResult == true) {  // the bad result means you get kicked out of the store
+                    return 0;
+                }
+                
+
+            }
+
+            return 1;
         }
         return 0;
     }

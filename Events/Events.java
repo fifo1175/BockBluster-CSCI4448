@@ -2,8 +2,14 @@ package Events;
 
 import java.util.ArrayList;
 
-public class Events {
-    public ArrayList<Events> alreadyHappened;
+import User.User;
 
-    public Events() {}
+public abstract class Events {
+    public String description;  // what happens in the event
+    public String result;  // the result of the event
+    User user;
+    public int occurences;
+
+    public abstract String getResult();
+
 }
