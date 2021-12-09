@@ -289,8 +289,40 @@ public class Store {
         return resultPoster;
     }
 
-    public ArrayList<Movie> GenreSearch(String Genre) {  // search API for movies by genre, return 5 of that genre
-        return null;
+    public ArrayList<Movie> GenreSearch(String Genre) throws Exception {  // search API for movies by genre, return 5 of that genre
+        ArrayList<Movie> recommendedMovies = new ArrayList<>();
+        System.out.println("Loading recommendations...");
+
+        if (Genre == "Action") {
+           recommendedMovies.add(GetMovie("tt0468569"));
+           recommendedMovies.add(GetMovie("tt0167260"));
+           recommendedMovies.add(GetMovie("tt1375666"));
+           recommendedMovies.add(GetMovie("tt0120737"));
+           recommendedMovies.add(GetMovie("tt5813916"));
+       }
+       else if (Genre == "Comedy") {
+           recommendedMovies.add(GetMovie("tt6751668"));
+           recommendedMovies.add(GetMovie("tt0118799"));
+           recommendedMovies.add(GetMovie("tt1675434"));
+           recommendedMovies.add(GetMovie("tt0088763"));
+           recommendedMovies.add(GetMovie("tt0027977"));
+       }
+       else if (Genre == "Drama") {
+           recommendedMovies.add(GetMovie("tt0111161"));
+           recommendedMovies.add(GetMovie("tt0068646"));
+           recommendedMovies.add(GetMovie("tt0468569"));
+           recommendedMovies.add(GetMovie("tt0071562"));
+           recommendedMovies.add(GetMovie("tt0050083"));
+       }
+       else if (Genre == "Sci-Fi") {
+           recommendedMovies.add(GetMovie("tt1375666"));
+           recommendedMovies.add(GetMovie("tt0133093"));
+           recommendedMovies.add(GetMovie("tt0080684"));
+           recommendedMovies.add(GetMovie("tt0816692"));
+           recommendedMovies.add(GetMovie("tt0076759"));
+       }
+
+       return recommendedMovies;
     }
 
     public static void runSimulation() throws Exception {
@@ -429,19 +461,44 @@ public class Store {
             DisplayUI(strings1);
             Scanner scanner = new Scanner(System.in);
             int movieGenre = scanner.nextInt();
+            ArrayList<Movie> recommendedMovies = new ArrayList<Movie>();
         
             if(movieGenre == 1){
-                this.GenreSearch("Action");
+                recommendedMovies = this.GenreSearch("Action");
             }
             if(movieGenre == 2){
-                this.GenreSearch("Comedy");
+                recommendedMovies = this.GenreSearch("Comedy");
             }
             if(movieGenre == 3){
-                this.GenreSearch("Drama");
+                recommendedMovies = this.GenreSearch("Drama");
             }
             if(movieGenre == 4){
-                this.GenreSearch("Sci-fi");
+                recommendedMovies = this.GenreSearch("Sci-fi");
             }
+
+            System.out.println("Here is a list of movies that you should watch:");
+            System.out.println("");
+
+            for (int i = 0; i < recommendedMovies.size(); i++) {
+                System.out.println(i+1 + ": " + recommendedMovies.get(i).title);
+                System.out.println("Release Year: " + recommendedMovies.get(i).year);
+                System.out.println("Plot: " + WordUtils.wrap(recommendedMovies.get(i).plot, 90));
+                System.out.println("Director: " + recommendedMovies.get(i).director);
+                System.out.println("Actors: " + recommendedMovies.get(i).actors);
+                System.out.println("Country: " + recommendedMovies.get(i).country);
+                System.out.println("");
+            }
+
+            System.out.println("Press 1-5 to view more movie details or add a movie to your cart");
+            System.out.println("Press 6 to go back to genre selection");
+            int userChoice = scanner.nextInt();
+
+            if (userChoice >= 1 && userChoice <= 5) {
+                CustomerSearch cSearch = new CustomerSearch(recommendedMovies.get(userChoice - 1).title, store, customer);
+                Movie resultMovie = cSearch.search(recommendedMovies.get(userChoice - 1).title, store, customer);
+            }
+
+            return 1;
 
         }
         if (choice == 3) { // checkout
