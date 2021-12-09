@@ -314,6 +314,27 @@ public class Store {
            recommendedMovies.add(GetMovie("tt0071562"));
            recommendedMovies.add(GetMovie("tt0050083"));
        }
+       else if (Genre == "Family") {
+            recommendedMovies.add(GetMovie("tt0245429"));
+            recommendedMovies.add(GetMovie("tt0038650"));
+            recommendedMovies.add(GetMovie("tt0110357"));
+            recommendedMovies.add(GetMovie("tt4633694"));
+            recommendedMovies.add(GetMovie("tt2380307"));
+        }
+        else if (Genre == "Horror") {
+            recommendedMovies.add(GetMovie("tt0054215"));
+            recommendedMovies.add(GetMovie("tt0081505"));
+            recommendedMovies.add(GetMovie("tt0078748"));
+            recommendedMovies.add(GetMovie("tt0084787"));
+            recommendedMovies.add(GetMovie("tt0070047"));
+        }
+        else if (Genre == "Romance") {
+            recommendedMovies.add(GetMovie("tt0109830"));
+            recommendedMovies.add(GetMovie("tt0095765"));
+            recommendedMovies.add(GetMovie("tt0034583"));
+            recommendedMovies.add(GetMovie("tt0338013"));
+            recommendedMovies.add(GetMovie("tt0211915"));
+        }
        else if (Genre == "Sci-Fi") {
            recommendedMovies.add(GetMovie("tt1375666"));
            recommendedMovies.add(GetMovie("tt0133093"));
@@ -451,7 +472,10 @@ public class Store {
             strings1.add("Press 1 for Action movie recommendations");
             strings1.add("Press 2 for Comedy movie recommendations");
             strings1.add("Press 3 for Drama movie recommendations");
-            strings1.add("Press 4 for Sci-fi movie recommendations");
+            strings1.add("Press 4 for Family movie recommendations");
+            strings1.add("Press 5 for Horror movie recommendations");
+            strings1.add("Press 6 for Romance movie recommendations");
+            strings1.add("Press 7 for Sci-fi movie recommendations");
             strings1.add("");
             strings1.add("");
             strings1.add("");
@@ -473,6 +497,15 @@ public class Store {
                 recommendedMovies = this.GenreSearch("Drama");
             }
             if(movieGenre == 4){
+                recommendedMovies = this.GenreSearch("Family");
+            }
+            if(movieGenre == 5){
+                recommendedMovies = this.GenreSearch("Horror");
+            }
+            if(movieGenre == 6){
+                recommendedMovies = this.GenreSearch("Romance");
+            }
+            if(movieGenre == 7){
                 recommendedMovies = this.GenreSearch("Sci-fi");
             }
 
