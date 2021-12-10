@@ -111,6 +111,10 @@ public class CustomerSearch implements SearchStrategy {
 
             user.cart.add(resultMovie);
 
+            movieInsert movie_insert = new movieInsert();
+
+            movie_insert.insert(resultMovie);  // insert movie into database
+
             System.out.println();
             System.out.println(resultMovie.title + " was added to your cart!");
         

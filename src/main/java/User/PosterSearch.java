@@ -4,6 +4,13 @@ import Store.Movie;
 import Store.Poster;
 import Store.Store;
 
+// database imports
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
 // JSON imports
 import org.json.JSONException;
 
@@ -34,6 +41,22 @@ public class PosterSearch implements SearchStrategy {
         this.movie = movie;
         this.store = store;
         this.user = user;
+    }
+
+    public static void posterinsert(Poster poster){ //this is going to take a poster object and insert it into the database
+        String connectionString = "mongodb+srv://movieDB:csci4448@cluster0.pfn8i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("bock_bluster");
+            MongoCollection<Document> postercollection = database.getCollection("poster_shelf");
+
+            Document posterdoc = new Document();
+            posterdoc.append("Title", poster.title)
+                    .append("Year", poster.year)
+                    .append("URL", poster.URL);
+
+            postercollection.insertOne(posterdoc);
+        }
     }
     
 
@@ -129,9 +152,11 @@ public class PosterSearch implements SearchStrategy {
                 }
             }
 
-            // add the poster to the store's poster inventory
-
+            // add the poster to the store's poster inventor
             store.postersInStock.add(resultPoster);
+
+            // add the poster to the database
+            this.posterinsert(resultPoster);
            
             return null;
         }

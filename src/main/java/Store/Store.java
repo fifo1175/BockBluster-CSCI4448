@@ -23,12 +23,12 @@ package Store;
 // AFTER all functionality, we can add database for posters, maybe display on a localhost site
 
 // JSON imports
-import org.json.JSONException;
-import org.json.simple.*;
+import com.mongodb.client.*;
+import org.bson.Document;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.events.Event;
-import org.json.*;
+
 
 // API imports
 import com.mashape.unirest.http.HttpResponse;
@@ -52,8 +52,6 @@ import User.PosterSearch;
 import User.User;
 import User.UserFactory;
 
-import Events.EventsDecorator;
-import Events.Events;
 import Events.ArgumentBadResult;
 import Events.AgreementGoodResult;
 import Events.Agreement;
@@ -283,8 +281,61 @@ public class Store {
         return resultPoster;
     }
 
-    public ArrayList<Movie> GenreSearch(String Genre) {  // search API for movies by genre, return 5 of that genre
-        return null;
+    public ArrayList<Movie> GenreSearch(String Genre) throws Exception {  // search API for movies by genre, return 5 of that genre
+        ArrayList<Movie> recommendedMovies = new ArrayList<>();
+        System.out.println("Loading recommendations...");
+
+        if (Genre == "Action") {
+            recommendedMovies.add(GetMovie("tt0468569"));
+            recommendedMovies.add(GetMovie("tt0167260"));
+            recommendedMovies.add(GetMovie("tt1375666"));
+            recommendedMovies.add(GetMovie("tt0120737"));
+            recommendedMovies.add(GetMovie("tt5813916"));
+        }
+        else if (Genre == "Comedy") {
+            recommendedMovies.add(GetMovie("tt6751668"));
+            recommendedMovies.add(GetMovie("tt0118799"));
+            recommendedMovies.add(GetMovie("tt1675434"));
+            recommendedMovies.add(GetMovie("tt0088763"));
+            recommendedMovies.add(GetMovie("tt0027977"));
+        }
+        else if (Genre == "Drama") {
+            recommendedMovies.add(GetMovie("tt0111161"));
+            recommendedMovies.add(GetMovie("tt0068646"));
+            recommendedMovies.add(GetMovie("tt0468569"));
+            recommendedMovies.add(GetMovie("tt0071562"));
+            recommendedMovies.add(GetMovie("tt0050083"));
+        }
+        else if (Genre == "Sci-Fi") {
+            recommendedMovies.add(GetMovie("tt1375666"));
+            recommendedMovies.add(GetMovie("tt0133093"));
+            recommendedMovies.add(GetMovie("tt0080684"));
+            recommendedMovies.add(GetMovie("tt0816692"));
+            recommendedMovies.add(GetMovie("tt0076759"));
+        }
+        else if (Genre == "Family") {
+            recommendedMovies.add(GetMovie("tt0245429"));
+            recommendedMovies.add(GetMovie("tt0038650"));
+            recommendedMovies.add(GetMovie("tt0110357"));
+            recommendedMovies.add(GetMovie("tt4633694"));
+            recommendedMovies.add(GetMovie("tt2380307"));
+        }
+        else if (Genre == "Horror") {
+            recommendedMovies.add(GetMovie("tt0054215"));
+            recommendedMovies.add(GetMovie("tt0081505"));
+            recommendedMovies.add(GetMovie("tt0078748"));
+            recommendedMovies.add(GetMovie("tt0084787"));
+            recommendedMovies.add(GetMovie("tt0070047"));
+        }
+        else if (Genre == "Romance") {
+            recommendedMovies.add(GetMovie("tt0109830"));
+            recommendedMovies.add(GetMovie("tt0095765"));
+            recommendedMovies.add(GetMovie("tt0034583"));
+            recommendedMovies.add(GetMovie("tt0338013"));
+            recommendedMovies.add(GetMovie("tt0211915"));
+        }
+
+        return recommendedMovies;
     }
 
     public static void runSimulation() throws Exception {
@@ -357,11 +408,11 @@ public class Store {
         strings.add("Press 2 if you'd like to get some movie recommendations");
         strings.add("Press 3 if you'd like to checkout");
         strings.add("Press 4 if you'd like to wait around and see what happens in the store");
+        strings.add("Press 5 if you'd like to view the store's current inventory of movies");
+        strings.add("Press 6 if you'd like to view the store's current inventory of posters");
         strings.add("");
         strings.add("");
-        strings.add("Press 0 to exit the store");
-        strings.add("");
-        strings.add("");
+        strings.add("Press 0 if you'd like to exit the store");
         strings.add("");
         DisplayUI(strings);
 
@@ -413,31 +464,67 @@ public class Store {
             strings1.add("Press 1 for Action movie recommendations");
             strings1.add("Press 2 for Comedy movie recommendations");
             strings1.add("Press 3 for Drama movie recommendations");
-            strings1.add("Press 4 for Sci-fi movie recommendations");
-            strings1.add("");
-            strings1.add("");
-            strings1.add("");
+            strings1.add("Press 4 for Family movie recommendations");
+            strings1.add("Press 5 for Horror movie recommendations");
+            strings1.add("Press 6 for Romance movie recommendations");
+            strings1.add("Press 7 for Sci-fi movie recommendations");
             strings1.add("");
             strings1.add("");
             strings1.add("");
             DisplayUI(strings1);
             Scanner scanner = new Scanner(System.in);
             int movieGenre = scanner.nextInt();
+
+            ArrayList<Movie> recommendedMovies = new ArrayList<Movie>();
         
             if(movieGenre == 1){
-                this.GenreSearch("Action");
+                recommendedMovies = this.GenreSearch("Action");
             }
             if(movieGenre == 2){
-                this.GenreSearch("Comedy");
+                recommendedMovies = this.GenreSearch("Comedy");
             }
             if(movieGenre == 3){
-                this.GenreSearch("Drama");
+                recommendedMovies = this.GenreSearch("Drama");
             }
             if(movieGenre == 4){
-                this.GenreSearch("Sci-fi");
+                recommendedMovies = this.GenreSearch("Family");
+            }
+            if(movieGenre == 5){
+                recommendedMovies = this.GenreSearch("Horror");
+            }
+            if(movieGenre == 6){
+                recommendedMovies = this.GenreSearch("Romance");
+            }
+            if(movieGenre == 7){
+                recommendedMovies = this.GenreSearch("Sci-fi");
             }
 
+            System.out.println("Here is a list of movies that you should watch:");
+            System.out.println("");
+
+            for (int i = 0; i < recommendedMovies.size(); i++) {
+                System.out.println(i+1 + ": " + recommendedMovies.get(i).title);
+                System.out.println("Release Year: " + recommendedMovies.get(i).year);
+                System.out.println("Plot: " + WordUtils.wrap(recommendedMovies.get(i).plot, 90));
+                System.out.println("Director: " + recommendedMovies.get(i).director);
+                System.out.println("Actors: " + recommendedMovies.get(i).actors);
+                System.out.println("Country: " + recommendedMovies.get(i).country);
+                System.out.println("");
+            }
+
+            System.out.println("Press 1-5 to view more movie details or add a movie to your cart");
+            System.out.println("Press 6 to go back to genre selection");
+            int userChoice = scanner.nextInt();
+
+            if (userChoice >= 1 && userChoice <= 5) {
+                CustomerSearch cSearch = new CustomerSearch(recommendedMovies.get(userChoice - 1).title, store, customer);
+                Movie resultMovie = cSearch.search(recommendedMovies.get(userChoice - 1).title, store, customer);
+            }
+
+            return 1;
+
         }
+
         if (choice == 3) { // checkout
 
             List<String> titles = new ArrayList<String>();
@@ -580,7 +667,50 @@ public class Store {
 
             return 1;
         }
+        else if (choice == 5){ // view store's movie inventory
+            this.viewMovieInventory();
+            return 1;
+        }
+        else if (choice == 6){ // view store's movie inventory
+            this.viewPosterInventory();
+            return 1;
+        }
         return 0;
+    }
+
+    public void viewMovieInventory(){  // retrieve entire movie collection and output each item
+        String connectionString = "mongodb+srv://movieDB:csci4448@cluster0.pfn8i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("bock_bluster");
+            MongoCollection<Document> shelfCollection = database.getCollection("store_shelf");
+
+            FindIterable<Document> movies = shelfCollection.find();
+
+            for (Document movie : movies) {
+                String jsonString = movie.toJson();
+                JSONObject json = new JSONObject(jsonString);
+                System.out.println(json.toString(4));
+            }
+        }
+    }
+
+    public void viewPosterInventory(){  // retrieve the entire poster collection and output each item
+        String connectionString = "mongodb+srv://movieDB:csci4448@cluster0.pfn8i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("bock_bluster");
+            MongoCollection<Document> shelfCollection = database.getCollection("poster_shelf");
+
+            FindIterable<Document> posters = shelfCollection.find();
+
+            for (Document poster : posters) {
+                String jsonString = poster.toJson();
+                JSONObject json = new JSONObject(jsonString);
+                System.out.println(json.toString(4));
+
+            }
+        }
     }
     
     
@@ -595,8 +725,8 @@ public class Store {
         strings.add("Press 1 if you'd like to search for a movie to order");
         strings.add("Press 2 if you'd like to search for a poster to order");
         strings.add("Press 3 if you'd like to wait around and see what happens in the store");
-        strings.add("");
-        strings.add("");
+        strings.add("Press 4 if you'd like to view the store's current inventory of movies");
+        strings.add("Press 5 if you'd like to view the store's current inventory of posters");
         strings.add("");
         strings.add("Press 0 to exit the store");
         strings.add("");
@@ -759,6 +889,14 @@ public class Store {
 
             }
 
+            return 1;
+        }
+        else if (choice == 4){ // view store's movie inventory
+            this.viewMovieInventory();
+            return 1;
+        }
+        else if (choice == 5){ // view store's movie inventory
+            this.viewPosterInventory();
             return 1;
         }
         return 0;

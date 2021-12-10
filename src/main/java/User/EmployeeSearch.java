@@ -111,6 +111,10 @@ public class EmployeeSearch implements SearchStrategy {
 
             store.moviesInStock.add(resultMovie);
 
+            movieInsert movie_insert = new movieInsert();
+
+            movie_insert.insert(resultMovie);  // insert movie into database
+
             System.out.println();
             System.out.println(resultMovie.title + " was added to the store's inventory!");
         
