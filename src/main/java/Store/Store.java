@@ -24,6 +24,7 @@ package Store;
 
 // JSON imports
 import com.mongodb.client.*;
+import static com.mongodb.client.model.Filters.eq;
 import org.bson.Document;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -228,7 +229,7 @@ public class Store {
         org.json.JSONObject result = response.getBody().getObject();
 
         String title = result.getString("Title");
-        String imdbID = result.getString("imdbRating");
+        String imdbID = result.getString("imdbID");
         String year = result.getString("Year");
         String filmRating = result.getString("Rated");
         String runtime = result.getString("Runtime");
@@ -281,61 +282,86 @@ public class Store {
         return resultPoster;
     }
 
-    public ArrayList<Movie> GenreSearch(String Genre) throws Exception {  // search API for movies by genre, return 5 of that genre
+    public void GenreSearch(String Genre) throws Exception {  // search API for movies by genre, return 5 of that genre
         ArrayList<Movie> recommendedMovies = new ArrayList<>();
         System.out.println("Loading recommendations...");
 
-        if (Genre == "Action") {
-            recommendedMovies.add(GetMovie("tt0468569"));
-            recommendedMovies.add(GetMovie("tt0167260"));
-            recommendedMovies.add(GetMovie("tt1375666"));
-            recommendedMovies.add(GetMovie("tt0120737"));
-            recommendedMovies.add(GetMovie("tt5813916"));
-        }
-        else if (Genre == "Comedy") {
-            recommendedMovies.add(GetMovie("tt6751668"));
-            recommendedMovies.add(GetMovie("tt0118799"));
-            recommendedMovies.add(GetMovie("tt1675434"));
-            recommendedMovies.add(GetMovie("tt0088763"));
-            recommendedMovies.add(GetMovie("tt0027977"));
-        }
-        else if (Genre == "Drama") {
-            recommendedMovies.add(GetMovie("tt0111161"));
-            recommendedMovies.add(GetMovie("tt0068646"));
-            recommendedMovies.add(GetMovie("tt0468569"));
-            recommendedMovies.add(GetMovie("tt0071562"));
-            recommendedMovies.add(GetMovie("tt0050083"));
-        }
-        else if (Genre == "Sci-Fi") {
-            recommendedMovies.add(GetMovie("tt1375666"));
-            recommendedMovies.add(GetMovie("tt0133093"));
-            recommendedMovies.add(GetMovie("tt0080684"));
-            recommendedMovies.add(GetMovie("tt0816692"));
-            recommendedMovies.add(GetMovie("tt0076759"));
-        }
-        else if (Genre == "Family") {
-            recommendedMovies.add(GetMovie("tt0245429"));
-            recommendedMovies.add(GetMovie("tt0038650"));
-            recommendedMovies.add(GetMovie("tt0110357"));
-            recommendedMovies.add(GetMovie("tt4633694"));
-            recommendedMovies.add(GetMovie("tt2380307"));
-        }
-        else if (Genre == "Horror") {
-            recommendedMovies.add(GetMovie("tt0054215"));
-            recommendedMovies.add(GetMovie("tt0081505"));
-            recommendedMovies.add(GetMovie("tt0078748"));
-            recommendedMovies.add(GetMovie("tt0084787"));
-            recommendedMovies.add(GetMovie("tt0070047"));
-        }
-        else if (Genre == "Romance") {
-            recommendedMovies.add(GetMovie("tt0109830"));
-            recommendedMovies.add(GetMovie("tt0095765"));
-            recommendedMovies.add(GetMovie("tt0034583"));
-            recommendedMovies.add(GetMovie("tt0338013"));
-            recommendedMovies.add(GetMovie("tt0211915"));
-        }
+        String connectionString = "mongodb+srv://movieDB:csci4448@cluster0.pfn8i.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-        return recommendedMovies;
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("bock_bluster");
+            MongoCollection<Document> recommendations = database.getCollection("recommendations");
+
+            System.out.println("Here is a list of movies that you should watch:");
+            System.out.println("");
+
+            if (Genre == "Action") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Action"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            } else if (Genre == "Comedy") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Comedy"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            } else if (Genre == "Drama") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Drama"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            } else if (Genre == "Family") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Family"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            } else if (Genre == "Horror") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Horror"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            } else if (Genre == "Romance") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Romance"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            } else if (Genre == "Sci-Fi") {
+                FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Sci-Fi"));
+
+                for (Document recommendation : movieRecommendations) {
+                    String jsonString = recommendation.toJson();
+                    JSONObject json = new JSONObject(jsonString);
+                    System.out.println(json.toString(4));
+                }
+
+            }
+
+            return;
+        }
     }
 
     public static void runSimulation() throws Exception {
@@ -478,39 +504,36 @@ public class Store {
             ArrayList<Movie> recommendedMovies = new ArrayList<Movie>();
         
             if(movieGenre == 1){
-                recommendedMovies = this.GenreSearch("Action");
+                this.GenreSearch("Action");
             }
             if(movieGenre == 2){
-                recommendedMovies = this.GenreSearch("Comedy");
+                this.GenreSearch("Comedy");
             }
             if(movieGenre == 3){
-                recommendedMovies = this.GenreSearch("Drama");
+                this.GenreSearch("Drama");
             }
             if(movieGenre == 4){
-                recommendedMovies = this.GenreSearch("Family");
+                this.GenreSearch("Family");
             }
             if(movieGenre == 5){
-                recommendedMovies = this.GenreSearch("Horror");
+                this.GenreSearch("Horror");
             }
             if(movieGenre == 6){
-                recommendedMovies = this.GenreSearch("Romance");
+                this.GenreSearch("Romance");
             }
             if(movieGenre == 7){
-                recommendedMovies = this.GenreSearch("Sci-fi");
+                this.GenreSearch("Sci-fi");
             }
 
-            System.out.println("Here is a list of movies that you should watch:");
-            System.out.println("");
-
-            for (int i = 0; i < recommendedMovies.size(); i++) {
-                System.out.println(i+1 + ": " + recommendedMovies.get(i).title);
-                System.out.println("Release Year: " + recommendedMovies.get(i).year);
-                System.out.println("Plot: " + WordUtils.wrap(recommendedMovies.get(i).plot, 90));
-                System.out.println("Director: " + recommendedMovies.get(i).director);
-                System.out.println("Actors: " + recommendedMovies.get(i).actors);
-                System.out.println("Country: " + recommendedMovies.get(i).country);
-                System.out.println("");
-            }
+//            for (int i = 0; i < recommendedMovies.size(); i++) {
+//                System.out.println(i+1 + ": " + recommendedMovies.get(i).title);
+//                System.out.println("Release Year: " + recommendedMovies.get(i).year);
+//                System.out.println("Plot: " + WordUtils.wrap(recommendedMovies.get(i).plot, 90));
+//                System.out.println("Director: " + recommendedMovies.get(i).director);
+//                System.out.println("Actors: " + recommendedMovies.get(i).actors);
+//                System.out.println("Country: " + recommendedMovies.get(i).country);
+//                System.out.println("");
+//            }
 
             System.out.println("Press 1-5 to view more movie details or add a movie to your cart");
             System.out.println("Press 6 to go back to genre selection");
