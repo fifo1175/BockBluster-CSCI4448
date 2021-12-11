@@ -41,6 +41,7 @@ import org.apache.commons.text.WordUtils;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -282,7 +283,7 @@ public class Store {
         return resultPoster;
     }
 
-    public void GenreSearch(String Genre) throws Exception {  // search API for movies by genre, return 5 of that genre
+    public ArrayList<Movie> GenreSearch(String Genre) throws Exception {  // search API for movies by genre, return 5 of that genre
         ArrayList<Movie> recommendedMovies = new ArrayList<>();
         System.out.println("Loading recommendations...");
 
@@ -292,16 +293,27 @@ public class Store {
             MongoDatabase database = mongoClient.getDatabase("bock_bluster");
             MongoCollection<Document> recommendations = database.getCollection("recommendations");
 
-            System.out.println("Here is a list of movies that you should watch:");
-            System.out.println("");
-
             if (Genre == "Action") {
                 FindIterable<Document> movieRecommendations = recommendations.find(eq("Genre", "Action"));
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             } else if (Genre == "Comedy") {
@@ -309,8 +321,22 @@ public class Store {
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             } else if (Genre == "Drama") {
@@ -318,8 +344,22 @@ public class Store {
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             } else if (Genre == "Family") {
@@ -327,8 +367,22 @@ public class Store {
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             } else if (Genre == "Horror") {
@@ -336,8 +390,22 @@ public class Store {
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             } else if (Genre == "Romance") {
@@ -345,8 +413,22 @@ public class Store {
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             } else if (Genre == "Sci-Fi") {
@@ -354,13 +436,27 @@ public class Store {
 
                 for (Document recommendation : movieRecommendations) {
                     String jsonString = recommendation.toJson();
-                    JSONObject json = new JSONObject(jsonString);
-                    System.out.println(json.toString(4));
+                    JSONObject result = new JSONObject(jsonString);
+
+                    String title = result.getString("Title");
+                    String imdbID = result.getString("imdbID");
+                    String year = result.getString("Year");
+                    String filmRating = result.getString("Rated");
+                    String runtime = result.getString("Runtime");
+                    String imdbRating = result.getString("imdbRating");
+                    String genre = result.getString("Genre");
+                    String plot = result.getString("Plot");
+                    String director = result.getString("Director");
+                    String actors = result.getString("Actors");
+                    String country = result.getString("Country");
+
+                    recommendedMovies.add(new Movie(title, imdbID, year, filmRating, runtime, imdbRating, genre, plot, director,
+                            actors, country));
                 }
 
             }
 
-            return;
+            return recommendedMovies;
         }
     }
 
@@ -502,41 +598,50 @@ public class Store {
             int movieGenre = scanner.nextInt();
 
             ArrayList<Movie> recommendedMovies = new ArrayList<Movie>();
-        
+
             if(movieGenre == 1){
-                this.GenreSearch("Action");
+                recommendedMovies = this.GenreSearch("Action");
             }
             if(movieGenre == 2){
-                this.GenreSearch("Comedy");
+                recommendedMovies = this.GenreSearch("Comedy");
             }
             if(movieGenre == 3){
-                this.GenreSearch("Drama");
+                recommendedMovies = this.GenreSearch("Drama");
             }
             if(movieGenre == 4){
-                this.GenreSearch("Family");
+                recommendedMovies = this.GenreSearch("Family");
             }
             if(movieGenre == 5){
-                this.GenreSearch("Horror");
+                recommendedMovies = this.GenreSearch("Horror");
             }
             if(movieGenre == 6){
-                this.GenreSearch("Romance");
+                recommendedMovies = this.GenreSearch("Romance");
             }
             if(movieGenre == 7){
-                this.GenreSearch("Sci-fi");
+                recommendedMovies = this.GenreSearch("Sci-fi");
             }
 
-//            for (int i = 0; i < recommendedMovies.size(); i++) {
-//                System.out.println(i+1 + ": " + recommendedMovies.get(i).title);
-//                System.out.println("Release Year: " + recommendedMovies.get(i).year);
-//                System.out.println("Plot: " + WordUtils.wrap(recommendedMovies.get(i).plot, 90));
-//                System.out.println("Director: " + recommendedMovies.get(i).director);
-//                System.out.println("Actors: " + recommendedMovies.get(i).actors);
-//                System.out.println("Country: " + recommendedMovies.get(i).country);
-//                System.out.println("");
-//            }
+            System.out.println("Here is a list of movies that you should watch:");
+            System.out.println("");
 
-            System.out.println("Press 1 when you are ready to return to the customer menu");
+            for (int i = 0; i < recommendedMovies.size(); i++) {
+                System.out.println(i+1 + ": " + recommendedMovies.get(i).title);
+                System.out.println("Release Year: " + recommendedMovies.get(i).year);
+                System.out.println("Plot: " + WordUtils.wrap(recommendedMovies.get(i).plot, 90));
+                System.out.println("Director: " + recommendedMovies.get(i).director);
+                System.out.println("Actors: " + recommendedMovies.get(i).actors);
+                System.out.println("Country: " + recommendedMovies.get(i).country);
+                System.out.println("");
+            }
+
+            System.out.println("Press 1-5 to view more movie details or add a movie to your cart");
+            System.out.println("Press 6 to go back to genre selection");
             int userChoice = scanner.nextInt();
+
+            if (userChoice >= 1 && userChoice <= 5) {
+                CustomerSearch cSearch = new CustomerSearch(recommendedMovies.get(userChoice - 1).title, store, customer);
+                Movie resultMovie = cSearch.search(recommendedMovies.get(userChoice - 1).title, store, customer);
+            }
 
             return 1;
 
