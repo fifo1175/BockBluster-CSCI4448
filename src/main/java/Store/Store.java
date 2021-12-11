@@ -535,14 +535,8 @@ public class Store {
 //                System.out.println("");
 //            }
 
-            System.out.println("Press 1-5 to view more movie details or add a movie to your cart");
-            System.out.println("Press 6 to go back to genre selection");
+            System.out.println("Press 1 when you are ready to return to the customer menu");
             int userChoice = scanner.nextInt();
-
-            if (userChoice >= 1 && userChoice <= 5) {
-                CustomerSearch cSearch = new CustomerSearch(recommendedMovies.get(userChoice - 1).title, store, customer);
-                Movie resultMovie = cSearch.search(recommendedMovies.get(userChoice - 1).title, store, customer);
-            }
 
             return 1;
 
